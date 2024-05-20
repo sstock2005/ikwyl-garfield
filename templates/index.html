@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>IKWYL - Garfield</title>
+        <meta name="description" content="I Know Where You Live Garfield Generator">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            body {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+                background-color: #333;
+                color: #fff;
+                font-family: Arial, sans-serif;
+            }
+            #searchForm {
+                margin-bottom: 1em;
+            }
+            #downloadLink {
+                display: none;
+            }
+        </style>
+        <script>
+            window.onload = function() {
+                document.getElementById('generateButton').onclick = function(event) {
+                    var searchValue = document.getElementById('searchInput').value;
+                    if (!searchValue.trim()) {  // Check if the input is empty
+                        document.getElementById('message').textContent = 'You must input an address.';
+                        return;  // Exit the function
+                    }
+                    var base64Value = btoa(searchValue);
+                    var url = 'http://localhost/' + encodeURIComponent(base64Value) + '.mp4';
+                    // Change the source of the video and display it
+                    var video = document.getElementById('exampleVideo');
+                    video.src = url;
+                    video.style.display = 'block';
+                    // Display the message and the download button
+                    document.getElementById('message').textContent = 'URL generated: ' + url;
+                    document.getElementById('downloadLink').href = url;
+                    document.getElementById('downloadButton').style.display = 'block';
+                };
+                document.getElementById('sendButton').onclick = function(event) {
+                    var searchValue = document.getElementById('searchInput').value;
+                    if (!searchValue.trim()) {  // Check if the input is empty
+                        document.getElementById('message').textContent = 'You must input an address.';
+                        return;  // Exit the function
+                    }
+                    var base64Value = btoa(searchValue);
+                    var url = 'http://localhost/' + encodeURIComponent(base64Value) + '.mp4';
+                    navigator.clipboard.writeText(url).then(function() {
+                        document.getElementById('message').textContent = 'URL copied to clipboard: ' + url;
+                    }, function(err) {
+                        console.error('Could not copy text: ', err);
+                    });
+                };
+                document.getElementById('downloadButton').onclick = function(event) {
+                    document.getElementById('downloadLink').click();  // Trigger a click event on the download link
+                };
+            };
+        </script>
+    </head>
+    <body>
+        <h1>I Know Where You Live Video Generator</h1>
+        <p>1. input address<br>2. send video or video link to friend</p>
+        <form id="searchForm">
+            <input type="text" id="searchInput" name="search" placeholder="Twitter Headquarters 1355 Market St. Ste. 900 San Francisco, CA 94103">
+            <button type="button" id="generateButton">Generate Video</button>
+            <button type="button" id="sendButton">Copy Video Link</button>
+        </form>
+        <video id="exampleVideo" width="640" controls style="display: none;">
+            <source type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <p id="message"></p>
+        <button type="button" id="downloadButton" style="display: none;">Download Video</button>
+        <a id="downloadLink" href="#" download style="display: none;"></a>
+    </body>
+</html>
